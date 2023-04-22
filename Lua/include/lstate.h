@@ -327,7 +327,7 @@ struct lua_State {
 
   /* Debug helpers */
   int usehelpers;
-  void (*vmcallback)(lua_State* L, Instruction* i);
+  void (*vmcallback)(lua_State* L, Instruction* i, TValue* k);
 };
 
 

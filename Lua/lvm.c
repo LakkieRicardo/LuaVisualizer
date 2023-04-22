@@ -1175,7 +1175,6 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
     /* invalidate top for instructions not expecting it */
     lua_assert(isIT(i) || (cast_void(L->top = base), 1));
 
-    L->vmcallback(L, &i);
     vmdispatch (GET_OPCODE(i)) {
       vmcase(OP_MOVE) {
         setobjs2s(L, ra, RB(i));
@@ -1836,6 +1835,7 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         vmbreak;
       }
     }
+    L->vmcallback(L, &i, k);
   }
 }
 

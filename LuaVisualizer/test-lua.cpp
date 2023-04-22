@@ -135,6 +135,44 @@ std::string LuaInstructionToString(lua_State* L, const Instruction& i)
     return ss.str();
 }
 
+std::string LuaStackValueToString(lua_State* L, int idx, int type)
+{
+	std::stringstream ss;
+	switch (type)
+	{
+	case LUA_TNIL:
+		return "nil";
+	case LUA_TBOOLEAN:
+		ss << lua_toboolean(L, idx) ? "true" : "false";
+		break;
+	case LUA_TNUMBER:
+		ss << lua_tonumber(L, idx);
+		break;
+	case LUA_TSTRING:
+		ss << lua_tostring(L, idx);
+		break;
+	case LUA_TTABLE:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TFUNCTION:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TUSERDATA:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TTHREAD:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TLIGHTUSERDATA:
+		ss << lua_topointer(L, idx);
+		break;
+	default:
+		return "unknown";
+	}
+
+	return ss.str();
+}
+
 std::string LuaStackToString(lua_State* L)
 {
 	std::stringstream ss;
@@ -146,40 +184,7 @@ std::string LuaStackToString(lua_State* L)
 		ss << topDownIdx << "\t(" <<luaL_typename(L, topDownIdx) << "): ";
 		int type = lua_type(L, topDownIdx);
 
-		switch (type)
-		{
-		case LUA_TNIL:
-			ss << "nil";
-			break;
-		case LUA_TBOOLEAN:
-			ss << lua_toboolean(L, topDownIdx) ? "true" : "false";
-			break;
-		case LUA_TNUMBER:
-			ss << lua_tonumber(L, topDownIdx);
-			break;
-		case LUA_TSTRING:
-			ss << lua_tostring(L, topDownIdx);
-			break;
-		case LUA_TTABLE:
-			ss << lua_topointer(L, topDownIdx);
-			break;
-		case LUA_TFUNCTION:
-			ss << lua_topointer(L, topDownIdx);
-			break;
-		case LUA_TUSERDATA:
-			ss << lua_topointer(L, topDownIdx);
-			break;
-		case LUA_TTHREAD:
-			ss << lua_topointer(L, topDownIdx);
-			break;
-		case LUA_TLIGHTUSERDATA:
-			ss << lua_topointer(L, topDownIdx);
-			break;
-		default:
-			ss << "unknown";
-			break;
-		}
-
+		ss << LuaStackValueToString(L, topDownIdx, type);
 		ss << std::endl;
 
 	}
@@ -187,10 +192,33 @@ std::string LuaStackToString(lua_State* L)
 	return ss.str();
 }
 
-void LuaVMCallback(lua_State* L, Instruction* i)
+std::string LuaGlobalsToString(lua_State* L)
+{
+	std::stringstream ss;
+
+	lua_getglobal(L, "_G");
+
+	lua_pushnil(L);
+	while (lua_next(L, -2))
+	{
+		int keyType = lua_type(L, -2);
+		int valueType = lua_type(L, -1);
+		ss << LuaStackValueToString(L, -2, keyType) << ": ";
+		ss << LuaStackValueToString(L, -1, valueType) << "\n";
+		lua_pop(L, 1);
+	}
+
+	lua_pop(L, 1);
+
+	return ss.str();
+}
+
+void LuaVMCallback(lua_State* L, Instruction* i, TValue* k)
 {
 	std::cout << "VM: " << LuaInstructionToString(L, *i) << std::endl;
-	std::cout << LuaStackToString(L) << std::endl;
+	//std::cout << LuaStackToString(L) << std::endl;
+	//std::cout << LuaGlobalsToString(L) << std::endl;
+	//std::cin.get();
 }
 
 int main()
