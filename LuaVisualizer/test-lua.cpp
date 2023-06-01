@@ -213,12 +213,75 @@ std::string LuaGlobalsToString(lua_State* L)
 	return ss.str();
 }
 
-void LuaVMCallback(lua_State* L, Instruction* i, TValue* k)
+std::string LuaConstantsToString(lua_State* L, TValue* k, int sizek)
+{
+	std::stringstream ss;
+
+	for (int i = 0; i < sizek; i++)
+	{
+		TValue* val = &(k[i]);
+		
+		if (ttisnil(val))
+		{
+			ss << "Nil\n";
+			continue;
+		}
+
+		std::string strValue;
+
+		switch (ttype(val))
+		{
+		case LUA_TBOOLEAN:
+			ss << "Boolean\n";
+			break;
+		case LUA_TLIGHTUSERDATA:
+			ss << "Light User Data\n";
+			break;
+		case LUA_TNUMBER:
+			strValue = lakkie_tostring(L, val);
+			if (ttisfloat(val)) {
+				ss << "Float: " << strValue << "\n";
+				break;
+			}
+			if (ttisinteger(val)) {
+				ss << "Integer: " << strValue << "\n";
+				break;
+			}
+			ss << "Misc number\n";
+			break;
+		case LUA_TSTRING:
+			strValue = svalue(val);
+			ss << "String: \"" << strValue << "\"\n";
+			break;
+		case LUA_TTABLE:
+			ss << "Table\n";
+			break;
+		case LUA_TFUNCTION:
+			ss << "Function\n";
+			break;
+		case LUA_TUSERDATA:
+			ss << "User data\n";
+			break;
+		case LUA_TTHREAD:
+			ss << "Thread\n";
+			break;
+		}
+	}
+
+	return ss.str();
+}
+
+void LuaVMStartCallback(lua_State* L, TValue* k, int sizek)
+{
+	std::cout << LuaConstantsToString(L, k, sizek) << std::endl;
+}
+
+void LuaVMCallback(lua_State* L, Instruction* i, TValue* k, int sizek)
 {
 	std::cout << "VM: " << LuaInstructionToString(L, *i) << std::endl;
-	//std::cout << LuaStackToString(L) << std::endl;
+	std::cout << LuaStackToString(L) << std::endl;
 	//std::cout << LuaGlobalsToString(L) << std::endl;
-	//std::cin.get();
+	std::cin.get();
 }
 
 int main()
@@ -227,6 +290,7 @@ int main()
 	L = luaL_newstate();
 	L->usehelpers = true;
 	L->vmcallback = LuaVMCallback;
+	L->vmstartcallback = LuaVMStartCallback;
 	
 	luaL_openlibs(L);
 	luaL_dofile(L, "testscript.lua");

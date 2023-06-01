@@ -1161,6 +1161,7 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
     ci->u.l.trap = 1;  /* assume trap is on, for now */
   }
   base = ci->func + 1;
+  L->vmstartcallback(L, k, cl->p->sizek);
   /* main loop of interpreter */
   for (;;) {
     Instruction i;  /* instruction being executed */
@@ -1835,7 +1836,7 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         vmbreak;
       }
     }
-    L->vmcallback(L, &i, k);
+    L->vmcallback(L, &i, k, cl->p->sizek);
   }
 }
 
