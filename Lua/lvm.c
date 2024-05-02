@@ -1161,7 +1161,6 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
     ci->u.l.trap = 1;  /* assume trap is on, for now */
   }
   base = ci->func + 1;
-  L->vmstartcallback(L, k, cl->p->sizek);
   /* main loop of interpreter */
   for (;;) {
     Instruction i;  /* instruction being executed */
@@ -1836,8 +1835,28 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         vmbreak;
       }
     }
-    L->vmcallback(L, &i, k, cl->p->sizek);
   }
+}
+
+void luaV_prepexec(lua_State* L, CallInfo* ci, VisualizerExecState* exec) {
+#if LUA_USE_JUMPTABLE
+#include "ljumptab.h"
+#endif
+    exec->trap = L->hookmask;
+    exec->cl = clLvalue(s2v(ci->func));
+    exec->k = exec->cl->p->k;
+    exec->pc = ci->u.l.savedpc;
+    if (l_unlikely(exec->trap)) {
+        if (exec->pc == exec->cl->p->code) {  /* first instruction (not resuming)? */
+            if (exec->cl->p->is_vararg)
+                exec->trap = 0;  /* hooks will start after VARARGPREP instruction */
+            else  /* check 'call' hook */
+                luaD_hookcall(L, ci);
+        }
+        ci->u.l.trap = 1;  /* assume trap is on, for now */
+    }
+    exec->base = ci->func + 1;
+    exec->is_prepared = 1;
 }
 
 /* }================================================================== */

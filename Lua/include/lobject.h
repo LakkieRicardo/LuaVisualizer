@@ -796,6 +796,16 @@ LUAI_FUNC const char *luaO_pushvfstring (lua_State *L, const char *fmt,
 LUAI_FUNC const char *luaO_pushfstring (lua_State *L, const char *fmt, ...);
 LUAI_FUNC void luaO_chunkid (char *out, const char *source, size_t srclen);
 
+/* Execution state struct for the visualizer */
+
+typedef struct VisualizerExecState {
+    LClosure* cl;
+    TValue* k;
+    StkId base;
+    const Instruction* pc;
+    int trap;
+    int is_prepared;
+} VisualizerExecState;
 
 #endif
 

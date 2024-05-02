@@ -12,7 +12,6 @@
 #include "lobject.h"
 #include "ltm.h"
 
-
 #if !defined(LUA_NOCVTN2S)
 #define cvt2str(o)	ttisnumber(o)
 #else
@@ -132,5 +131,8 @@ LUAI_FUNC lua_Integer luaV_mod (lua_State *L, lua_Integer x, lua_Integer y);
 LUAI_FUNC lua_Number luaV_modf (lua_State *L, lua_Number x, lua_Number y);
 LUAI_FUNC lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y);
 LUAI_FUNC void luaV_objlen (lua_State *L, StkId ra, const TValue *rb);
+
+/* Visualizer functions */
+LUAI_FUNC void luaV_prepexec(lua_State* L, CallInfo* ci, VisualizerExecState* exec);
 
 #endif

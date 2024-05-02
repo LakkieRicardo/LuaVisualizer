@@ -324,11 +324,6 @@ struct lua_State {
   int basehookcount;
   int hookcount;
   volatile l_signalT hookmask;
-
-  /* Debug helpers */
-  int usehelpers;
-  void (*vmcallback)(lua_State* L, Instruction* i, TValue* k, int sizek);
-  void (*vmstartcallback)(lua_State* L, TValue* k, int sizek);
 };
 
 
@@ -403,7 +398,6 @@ LUAI_FUNC void luaE_incCstack (lua_State *L);
 LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, int tocont);
 LUAI_FUNC void luaE_warnerror (lua_State *L, const char *where);
 LUAI_FUNC int luaE_resetthread (lua_State *L, int status);
-
 
 #endif
 

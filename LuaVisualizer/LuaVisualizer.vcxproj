@@ -140,15 +140,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LuaStateManager.cpp" />
     <ClCompile Include="test-lua.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="testscript.lua" />
+    <None Include="FunctionScript.lua" />
+    <None Include="LogicScript.lua" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lua\Lua.vcxproj">
       <Project>{a6a16538-56e3-437e-bf43-2ca45cc160e8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LuaStateManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
