@@ -805,6 +805,7 @@ typedef struct VisualizerExecState {
     const Instruction* pc;
     int trap;
     int is_prepared;
+    int inc; /* nCcalls increment value from ccall */
 } VisualizerExecState;
 
 #endif

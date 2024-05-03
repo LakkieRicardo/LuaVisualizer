@@ -2,18 +2,21 @@
 
 using namespace LuaV;
 
-LuaDebugState::LuaDebugState()
+LuaVisualizerState::LuaVisualizerState()
 {
-	m_L = luaL_newstate();
+	m_execState = VisualizerExecState();
 	m_execState.is_prepared = false;
+	m_L = luaL_newstate();
+	m_L->using_visualizer = true;
+	m_L->exec_state = &m_execState;
 }
 
-LuaV::LuaDebugState::~LuaDebugState()
+LuaV::LuaVisualizerState::~LuaVisualizerState()
 {
 	lua_close(m_L);
 }
 
-std::string LuaDebugState::InstructionToDisplayString(const Instruction& i)
+std::string LuaVisualizerState::InstructionToDisplayString(const Instruction& i)
 {
 	std::stringstream ss;
 	OpCode opcode = GET_OPCODE(i);
@@ -139,7 +142,7 @@ std::string LuaDebugState::InstructionToDisplayString(const Instruction& i)
 	return ss.str();
 }
 
-std::string LuaDebugState::LuaStackValueToString(int idx, int type)
+std::string LuaVisualizerState::LuaStackValueToString(int idx, int type)
 {
 	std::stringstream ss;
 	switch (type)
@@ -177,15 +180,26 @@ std::string LuaDebugState::LuaStackValueToString(int idx, int type)
 	return ss.str();
 }
 
-void LuaV::LuaDebugState::CreateDebugLuaState()
+void LuaV::LuaVisualizerState::LoadLuaScript(const std::string& filename)
 {
+	luaL_loadfile(m_L, filename.c_str());
 }
 
-void LuaV::LuaDebugState::BeginCallExecution()
+void LuaV::LuaVisualizerState::BeginCallExecution()
 {
+	// Begin a call in the global context
+	// Lua do some checks and run luaD_precall, setting us up to run the interpreter loop
+	luaD_callnoyield(m_L, m_L->top - 1, -1);
 }
 
-Instruction LuaV::LuaDebugState::GetNextInstruction()
+void LuaV::LuaVisualizerState::FinishCallExecution()
+{
+	// Need to manually make a call to finish the execution because the initial luaD_callnoyield
+	// shouldn't finish it on its own.
+	luaV_finishexec(m_L);
+}
+
+Instruction LuaV::LuaVisualizerState::GetNextInstruction()
 {
 	if (!m_execState.is_prepared)
 	{
@@ -195,6 +209,6 @@ Instruction LuaV::LuaDebugState::GetNextInstruction()
 	return *(m_execState.pc + 1);
 }
 
-void LuaV::LuaDebugState::DoSingleInstruction()
+void LuaV::LuaVisualizerState::DoSingleInstruction()
 {
 }

@@ -605,7 +605,13 @@ l_sinline void ccall (lua_State *L, StkId func, int nResults, int inc) {
     luaE_checkcstack(L);
   if ((ci = luaD_precall(L, func, nResults)) != NULL) {  /* Lua function? */
     ci->callstatus = CIST_FRESH;  /* mark that it is a "fresh" execute */
-    luaV_execute(L, ci);  /* call it */
+    if (L->using_visualizer) {
+        L->ci = ci;
+        luaV_prepexec(L); /* prepare the VM */
+        return;
+    } else {
+        luaV_execute(L, ci);  /* call it */
+    }
   }
   L->nCcalls -= inc;
 }

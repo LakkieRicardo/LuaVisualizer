@@ -16,7 +16,7 @@ extern "C" {
 namespace LuaV
 {
 
-	class LuaDebugState
+	class LuaVisualizerState
 	{
 
 		lua_State* m_L; // Local state of the virtual machine.
@@ -24,9 +24,11 @@ namespace LuaV
 
 	public:
 
-		LuaDebugState();
+		LuaVisualizerState();
 
-		~LuaDebugState();
+		~LuaVisualizerState();
+
+		// TODO move these to another location
 
 		std::string InstructionToDisplayString(const Instruction& i);
 
@@ -37,15 +39,17 @@ namespace LuaV
 		/// <param name="type">What data is at that location</param>
 		std::string LuaStackValueToString(int idx, int type);
 
-		/// <summary>
-		/// Initializes a new Lua state using the luaL_newstate function, and defines its VM callbacks.
-		/// </summary>
-		void CreateDebugLuaState();
+		void LoadLuaScript(const std::string& filename);
 
 		/// <summary>
 		/// Prepares the interpreter loop.
 		/// </summary>
 		void BeginCallExecution();
+
+		/// <summary>
+		/// Finishes the current call by decrementing nCcalls. This can only be run when the call is finished.
+		/// </summary>
+		void FinishCallExecution();
 
 		/// <summary>
 		/// Peeks ahead to the next instruction in the program without modifying the current state.

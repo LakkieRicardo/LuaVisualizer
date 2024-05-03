@@ -133,6 +133,7 @@ LUAI_FUNC lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y);
 LUAI_FUNC void luaV_objlen (lua_State *L, StkId ra, const TValue *rb);
 
 /* Visualizer functions */
-LUAI_FUNC void luaV_prepexec(lua_State* L, CallInfo* ci, VisualizerExecState* exec);
+LUAI_FUNC void luaV_prepexec(lua_State* L);
+LUAI_FUNC void luaV_finishexec(lua_State* L);
 
 #endif

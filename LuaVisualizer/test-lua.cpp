@@ -62,12 +62,9 @@ std::string LuaConstantsToString(lua_State* L, TValue* k, int sizek)
 
 int main()
 {
-	// Checking call hierarchy for luaL_dofile
-
-	lua_State* L;
-	L = luaL_newstate();
-	luaL_openlibs(L);
-	luaL_dofile(L, "LogicScript.lua");
-
-	lua_close(L);
+	LuaV::LuaVisualizerState visualizer;
+	visualizer.LoadLuaScript("LogicScript.lua");
+	visualizer.BeginCallExecution();
+	Instruction next = visualizer.GetNextInstruction();
+	std::cout << "Next Instruction: " << visualizer.InstructionToDisplayString(next) << std::endl;
 }

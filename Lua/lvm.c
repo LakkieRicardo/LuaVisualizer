@@ -1838,25 +1838,31 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
   }
 }
 
-void luaV_prepexec(lua_State* L, CallInfo* ci, VisualizerExecState* exec) {
+void luaV_prepexec(lua_State* L) {
 #if LUA_USE_JUMPTABLE
 #include "ljumptab.h"
 #endif
-    exec->trap = L->hookmask;
-    exec->cl = clLvalue(s2v(ci->func));
-    exec->k = exec->cl->p->k;
-    exec->pc = ci->u.l.savedpc;
-    if (l_unlikely(exec->trap)) {
-        if (exec->pc == exec->cl->p->code) {  /* first instruction (not resuming)? */
-            if (exec->cl->p->is_vararg)
-                exec->trap = 0;  /* hooks will start after VARARGPREP instruction */
+    VisualizerExecState* ex = L->exec_state;
+    CallInfo* ci = L->ci;
+    ex->trap = L->hookmask;
+    ex->cl = clLvalue(s2v(ci->func));
+    ex->k = ex->cl->p->k;
+    ex->pc = ci->u.l.savedpc;
+    if (l_unlikely(ex->trap)) {
+        if (ex->pc == ex->cl->p->code) {  /* first instruction (not resuming)? */
+            if (ex->cl->p->is_vararg)
+                ex->trap = 0;  /* hooks will start after VARARGPREP instruction */
             else  /* check 'call' hook */
                 luaD_hookcall(L, ci);
         }
         ci->u.l.trap = 1;  /* assume trap is on, for now */
     }
-    exec->base = ci->func + 1;
-    exec->is_prepared = 1;
+    ex->base = ci->func + 1;
+    ex->is_prepared = 1;
+}
+
+void luaV_finishexec(lua_State* L) {
+    L->nCcalls -= L->exec_state->inc;
 }
 
 /* }================================================================== */

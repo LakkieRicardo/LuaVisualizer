@@ -324,6 +324,9 @@ struct lua_State {
   int basehookcount;
   int hookcount;
   volatile l_signalT hookmask;
+
+  int using_visualizer;
+  VisualizerExecState *exec_state;
 };
 
 

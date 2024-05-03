@@ -358,6 +358,8 @@ LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud) {
   LG *l = cast(LG *, (*f)(ud, NULL, LUA_TTHREAD, sizeof(LG)));
   if (l == NULL) return NULL;
   L = &l->l.l;
+  L->using_visualizer = 0;
+  L->exec_state = 0;
   g = &l->g;
   L->tt = LUA_VTHREAD;
   g->currentwhite = bitmask(WHITE0BIT);
