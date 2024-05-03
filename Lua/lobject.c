@@ -377,14 +377,6 @@ void luaO_tostring (lua_State *L, TValue *obj) {
   setsvalue(L, obj, luaS_newlstr(L, buff, len));
 }
 
-// Function I made because I don't want to pop values off the stack
-char* lakkie_tostring(lua_State* L, TValue* obj) {
-    char buff[MAXNUMBER2STR];
-    int len = tostringbuff(obj, buff);
-    buff[len] = '\0';
-    return buff;
-}
-
 
 /*
 ** {==================================================================
