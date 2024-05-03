@@ -1,5 +1,7 @@
 #include "LuaStateManager.h"
 
+#include <iostream>
+
 using namespace LuaV;
 
 LuaVisualizerState::LuaVisualizerState()
@@ -203,7 +205,7 @@ Instruction LuaV::LuaVisualizerState::GetNextInstruction()
 {
 	if (!m_execState.is_prepared)
 	{
-		throw std::runtime_error("Lua state has not yet been called using LuaDebugState::BeginCallExecution");
+		throw std::runtime_error("Lua function has not yet been called using LuaDebugState::BeginCallExecution");
 	}
 
 	return *(m_execState.pc + 1);
@@ -211,4 +213,20 @@ Instruction LuaV::LuaVisualizerState::GetNextInstruction()
 
 void LuaV::LuaVisualizerState::DoSingleInstruction()
 {
+}
+
+void LuaV::LuaVisualizerState::PrintInstructionsUntilReturn()
+{
+	if (!m_execState.is_prepared)
+	{
+		throw std::runtime_error("Lua function has not yet been called using LuaDebugState::BeginCallExecution");
+	}
+	
+	const Instruction* currentPC = m_execState.pc;
+	Instruction currentInstruction = *currentPC;
+	while (GET_OPCODE(currentInstruction) != OP_RETURN)
+	{
+		std::cout << InstructionToDisplayString(currentInstruction) << std::endl;
+		currentInstruction = *(++currentPC);
+	}
 }

@@ -12,6 +12,7 @@ extern "C" {
 
 #include <string>
 #include <sstream>
+#include <vector>
 
 namespace LuaV
 {
@@ -60,6 +61,11 @@ namespace LuaV
 		/// Advances the program ahead by 1 instruction.
 		/// </summary>
 		void DoSingleInstruction();
+
+		/// <summary>
+		/// Prints all of the instruction names until OP_RETURN.
+		/// </summary>
+		void PrintInstructionsUntilReturn();
 	};
 
 }
