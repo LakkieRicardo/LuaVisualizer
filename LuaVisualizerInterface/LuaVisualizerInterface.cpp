@@ -4,7 +4,7 @@
 int main()
 {
 	LuaV::LuaVisualizerState vizer;
-	vizer.LoadLuaScript("LogicScript.lua");
+	vizer.LoadLuaScript("DemoScripts/LogicScript.lua");
 	vizer.BeginCallExecution();
 	vizer.PrintInstructionsUntilReturn();
 }
