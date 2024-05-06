@@ -30,13 +30,13 @@ namespace LuaV
 		/// <summary>
 		/// The opcode of the last executed instruction.
 		/// </summary>
-		OpCode lastOpCode;
+		OpCode opCode;
 
 		/// <summary>
 		/// The display name of the last executed name without the OP_ prefix. This should
 		/// match the lastOpCode variable.
 		/// </summary>
-		std::string lastOpCodeName;
+		std::string opCodeName;
 
 		/// <summary>
 		/// This variable represents k in the bytecode notation, and in the Lua VM is retrieved

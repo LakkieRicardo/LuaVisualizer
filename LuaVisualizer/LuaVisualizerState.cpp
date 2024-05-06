@@ -84,6 +84,20 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 {
 	valid = false;
 
+	Instruction i = *(L->exec_state->pc);
+	opCode = GET_OPCODE(i);
+	if (opCode < 0 || opCode >= NUM_OPCODES)
+	{
+		throw std::runtime_error("Found an invalid opcode");
+	}
+
+	opCodeName = opnames[opCode];
+	StkId base = L->exec_state->base;
+	regA = (base + GETARG_A(i))->val;
+	// TODO Will need to handle every instruction separately
+	// TODO copy function from LuaValueConverter?
+	/*regB = (base + GETARG_B(i))->val;
+	regC = (base + GETARG_C(i))->val;*/
 
 
 	valid = true;
@@ -92,6 +106,6 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 void LuaV::LuaVMState::ClearVMState()
 {
 	valid = false;
-	lastOpCode = static_cast<OpCode>(NUM_OPCODES); // TODO is this the right kind of cast?
-	lastOpCodeName = "UNKNOWN";
+	opCode = static_cast<OpCode>(NUM_OPCODES); // TODO is this the right kind of cast?
+	opCodeName = "UNKNOWN";
 }
