@@ -1,24 +1,7 @@
-#include "LuaStateManager.h"
+#include "include/LuaValueConverter.h"
+#include <sstream>
 
-#include <iostream>
-
-using namespace LuaV;
-
-LuaVisualizerState::LuaVisualizerState()
-{
-	m_execState = VisualizerExecState();
-	m_execState.is_prepared = false;
-	m_L = luaL_newstate();
-	m_L->using_visualizer = true;
-	m_L->exec_state = &m_execState;
-}
-
-LuaV::LuaVisualizerState::~LuaVisualizerState()
-{
-	lua_close(m_L);
-}
-
-std::string LuaVisualizerState::InstructionToDisplayString(const Instruction& i)
+std::string LuaV::InstructionToString(const Instruction& i)
 {
 	std::stringstream ss;
 	OpCode opcode = GET_OPCODE(i);
@@ -144,7 +127,7 @@ std::string LuaVisualizerState::InstructionToDisplayString(const Instruction& i)
 	return ss.str();
 }
 
-std::string LuaVisualizerState::LuaStackValueToString(int idx, int type)
+std::string LuaV::StackVarToString(lua_State* L, int idx, int type)
 {
 	std::stringstream ss;
 	switch (type)
@@ -152,81 +135,32 @@ std::string LuaVisualizerState::LuaStackValueToString(int idx, int type)
 	case LUA_TNIL:
 		return "nil";
 	case LUA_TBOOLEAN:
-		ss << lua_toboolean(m_L, idx) ? "true" : "false";
+		ss << lua_toboolean(L, idx) ? "true" : "false";
 		break;
 	case LUA_TNUMBER:
-		ss << lua_tonumber(m_L, idx);
+		ss << lua_tonumber(L, idx);
 		break;
 	case LUA_TSTRING:
-		ss << lua_tostring(m_L, idx);
+		ss << lua_tostring(L, idx);
 		break;
 	case LUA_TTABLE:
-		ss << lua_topointer(m_L, idx);
+		ss << lua_topointer(L, idx);
 		break;
 	case LUA_TFUNCTION:
-		ss << lua_topointer(m_L, idx);
+		ss << lua_topointer(L, idx);
 		break;
 	case LUA_TUSERDATA:
-		ss << lua_topointer(m_L, idx);
+		ss << lua_topointer(L, idx);
 		break;
 	case LUA_TTHREAD:
-		ss << lua_topointer(m_L, idx);
+		ss << lua_topointer(L, idx);
 		break;
 	case LUA_TLIGHTUSERDATA:
-		ss << lua_topointer(m_L, idx);
+		ss << lua_topointer(L, idx);
 		break;
 	default:
 		return "unknown";
 	}
 
 	return ss.str();
-}
-
-void LuaV::LuaVisualizerState::LoadLuaScript(const std::string& filename)
-{
-	luaL_loadfile(m_L, filename.c_str());
-}
-
-void LuaV::LuaVisualizerState::BeginCallExecution()
-{
-	// Begin a call in the global context
-	// Lua do some checks and run luaD_precall, setting us up to run the interpreter loop
-	luaD_callnoyield(m_L, m_L->top - 1, -1);
-}
-
-void LuaV::LuaVisualizerState::FinishCallExecution()
-{
-	// Need to manually make a call to finish the execution because the initial luaD_callnoyield
-	// shouldn't finish it on its own.
-	luaV_finishexec(m_L);
-}
-
-Instruction LuaV::LuaVisualizerState::GetNextInstruction()
-{
-	if (!m_execState.is_prepared)
-	{
-		throw std::runtime_error("Lua function has not yet been called using LuaDebugState::BeginCallExecution");
-	}
-
-	return *(m_execState.pc + 1);
-}
-
-void LuaV::LuaVisualizerState::DoSingleInstruction()
-{
-}
-
-void LuaV::LuaVisualizerState::PrintInstructionsUntilReturn()
-{
-	if (!m_execState.is_prepared)
-	{
-		throw std::runtime_error("Lua function has not yet been called using LuaDebugState::BeginCallExecution");
-	}
-	
-	const Instruction* currentPC = m_execState.pc;
-	Instruction currentInstruction = *currentPC;
-	while (GET_OPCODE(currentInstruction) != OP_RETURN)
-	{
-		std::cout << InstructionToDisplayString(currentInstruction) << std::endl;
-		currentInstruction = *(++currentPC);
-	}
 }
