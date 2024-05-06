@@ -12,11 +12,14 @@ LuaVisualizerState::LuaVisualizerState()
 	m_L = luaL_newstate();
 	m_L->using_visualizer = true;
 	m_L->exec_state = &m_execState;
+	m_vmState = LuaVMState();
+	m_vmState.ClearVMState();
 }
 
 LuaV::LuaVisualizerState::~LuaVisualizerState()
 {
 	lua_close(m_L);
+
 }
 
 void LuaV::LuaVisualizerState::LoadLuaScript(const std::string& filename)
@@ -50,6 +53,10 @@ Instruction LuaV::LuaVisualizerState::GetNextInstruction() const
 
 void LuaV::LuaVisualizerState::DoSingleInstruction()
 {
+	m_vmState.ClearVMState();
+	// TODO unfinished code
+
+	m_vmState.UpdateVMState(m_L);
 }
 
 void LuaV::LuaVisualizerState::PrintInstructionsUntilReturn() const
@@ -71,4 +78,20 @@ void LuaV::LuaVisualizerState::PrintInstructionsUntilReturn() const
 lua_State* LuaV::LuaVisualizerState::GetLuaState() const
 {
 	return m_L;
+}
+
+void LuaV::LuaVMState::UpdateVMState(lua_State* L)
+{
+	valid = false;
+
+
+
+	valid = true;
+}
+
+void LuaV::LuaVMState::ClearVMState()
+{
+	valid = false;
+	lastOpCode = static_cast<OpCode>(NUM_OPCODES); // TODO is this the right kind of cast?
+	lastOpCodeName = "UNKNOWN";
 }
