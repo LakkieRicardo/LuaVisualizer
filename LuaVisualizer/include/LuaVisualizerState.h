@@ -16,15 +16,17 @@ namespace LuaV
 
 	  These variables are retrieved from the lua_State and the VisualizerExecState,
 	  and should reflect its properties while being updated.
+
+	  This class should only be instantiated by LuaVisualizerState.
 	*/
-	struct LuaVMState
+	class LuaVMState
 	{
 		/// <summary>
 		/// Represents whether this data is valid. If the VM has been closed or somehow
 		/// altered while the data is not updated, this should be marked as false.
 		/// 
-		/// This almost acts as a lock on the state object, and it should not be read
-		/// from if flagged as false.
+		/// Every time an update to the visualizer state is called, this flag should be
+		/// updated to false until UpdateVMState(lua_State*) is called.
 		/// </summary>
 		bool valid;
 
@@ -40,19 +42,16 @@ namespace LuaV
 		std::string opCodeName;
 
 		/// <summary>
-		/// Instruction arguments:
-		/// All of the arguments used for this instruction. The key is a string representing any
-		/// of the following values: A, B, C, k, sB, sC, Ax, Bx, sJ, sBx. To get more information
-		/// about what these arguments mean, see both the Lua bytecode reference:
+		/// Short for "instruction arguments" and represents all of the arguments used for this
+		/// instruction. The key is a string representing any of the following values: A, B, C,
+		/// k, sB, sC, Ax, Bx, sJ, sBx. To get more information about what these arguments mean,
+		/// see both the Lua bytecode reference:
 		/// https://the-ravi-programming-language.readthedocs.io/en/latest/lua_bytecode_reference.html
-		/// and the "Instructions Table.txt" included in this project.
-		/// 
-		/// These argument values are retrieved from the instruction itself using the GETARG_
-		/// macros Lua itself.
+		/// and the "Instructions Table.txt" included in this repository/solution.
 		/// </summary>
 		std::map<std::string, int> iArgs;
 
-	public: // Update functions
+	public: // Functions to update fields
 
 		/// <summary>
 		/// Reads all of the variables from the VisualizerExecState and lua_State, interpreting
@@ -65,11 +64,33 @@ namespace LuaV
 		/// script, or that the lua_State is somehow inactive, errored, etc.
 		/// </summary>
 		void ClearVMState();
+
+	public:
+
+		/// <returns>If the data in this state is currently valid</returns>
+		inline bool IsValid() { return valid; }
+
+		/// <returns>The last instruction that was executed</returns>
+		inline OpCode GetLastInstruction() { return opCode; }
+
+		/// <returns>User-friendly name of the last executed instruction without OP_ prefix.</returns>
+		inline const std::string& GetLastInstructionName() { return opCodeName; }
+
+		/// <summary>
+		/// The instruction args map is a way of accessing all the arguments an instruction contains
+		/// without having to know its opcode. These arguments are embedded into the Instruction
+		/// object that the Lua VM runs on and, using bitwise manipulation, can be extracted from it.
+		/// </summary>
+		/// <returns>Map of all the arguments this instruction contains.</returns>
+		inline const std::map<std::string, int>& GetInstructionArgs() { return iArgs; }
 	};
 
 	/*
 	  Class which contains a lua_State and a VisualizerExecState. It owns both of
 	  these objects and will clean them up when the object destructor is called.
+
+	  Lua's state can be manipulated and interrogated using this class. One example
+	  is getting the state, advancing one instruction, then getting the state again.
 	*/
 	class LuaVisualizerState
 	{
@@ -94,7 +115,7 @@ namespace LuaV
 		/// <summary>
 		/// Loads a script into the Lua Virtual Machine according to the filename.
 		/// </summary>
-		/// <param name="filename">Name of the .lua script file.</param>
+		/// <param name="filename">Path to the .lua script file.</param>
 		void LoadLuaScript(const std::string& filename);
 
 		/// <summary>
