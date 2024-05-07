@@ -8,8 +8,8 @@ namespace LuaV
 	/// <summary>
 	/// Converts a Lua bytecode instruction to a display string.
 	/// </summary>
-	/// <param name="i"></param>
-	/// <returns>The name of the operation and its parameters(ex: A, B, C, Bx, etc.)</returns>
+	/// <returns>The name of the operation and its parameters(ex: A, B, C, Bx, etc.). If the opcode
+	/// is not recognized, "<unrecognized opcode>" will be returned.</returns>
 	std::string InstructionToString(const Instruction& i);
 
 	/// <summary>

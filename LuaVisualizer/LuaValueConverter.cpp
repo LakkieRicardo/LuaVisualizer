@@ -5,7 +5,7 @@ std::string LuaV::InstructionToString(const Instruction& i)
 {
 	std::stringstream ss;
 	OpCode opcode = GET_OPCODE(i);
-	if (opcode >= sizeof(opnames) || opcode < 0)
+	if (opcode >= NUM_OPCODES || opcode < 0)
 	{
 		return "<unrecognized opcode>";
 	}
@@ -122,6 +122,9 @@ std::string LuaV::InstructionToString(const Instruction& i)
 	case OP_TFORCALL:
 	case OP_VARARG:
 		ss << "A: " << GETARG_A(i) << ", C:" << GETARG_C(i);
+		break;
+	default:
+		ss << "<unrecognized opcode>";
 	}
 
 	return ss.str();

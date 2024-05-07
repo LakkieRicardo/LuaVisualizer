@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <map>
 
 namespace LuaV
 {
@@ -39,16 +40,17 @@ namespace LuaV
 		std::string opCodeName;
 
 		/// <summary>
-		/// This variable represents k in the bytecode notation, and in the Lua VM is retrieved
-		/// using the macro GETARG_k. It looks up a variable in the constant table according to
-		/// this index.
+		/// Instruction arguments:
+		/// All of the arguments used for this instruction. The key is a string representing any
+		/// of the following values: A, B, C, k, sB, sC, Ax, Bx, sJ, sBx. To get more information
+		/// about what these arguments mean, see both the Lua bytecode reference:
+		/// https://the-ravi-programming-language.readthedocs.io/en/latest/lua_bytecode_reference.html
+		/// and the "Instructions Table.txt" included in this project.
+		/// 
+		/// These argument values are retrieved from the instruction itself using the GETARG_
+		/// macros Lua itself.
 		/// </summary>
-		int constantIdx;
-
-		/// <summary>
-		/// Registers A-C, represented using a tagged value.
-		/// </summary>
-		TValue regA, regB, regC;
+		std::map<std::string, int> iArgs;
 
 	public: // Update functions
 

@@ -173,12 +173,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\LuaScripts\FunctionScript.lua" />
-    <None Include="TestData\LuaScripts\LogicScript.lua" />
-    <None Include="TestData\LuaScripts\testscript.lua" />
+    <CopyFileToFolders Include="TestData\LuaScripts\FunctionScript.lua">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="TestData\LuaScripts\LogicScript.lua">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="TestData\LuaScripts\testscript.lua">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\ToStringSpecialization.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
