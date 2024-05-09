@@ -80,6 +80,11 @@ lua_State* LuaV::LuaVisualizerState::GetLuaState() const
 	return m_L;
 }
 
+const StackValue* LuaV::LuaVisualizerState::GetValueInStack(int offset) const
+{
+	return m_execState.base + offset;
+}
+
 void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 {
 	valid = false;

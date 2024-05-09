@@ -167,3 +167,8 @@ std::string LuaV::StackVarToString(lua_State* L, int idx, int type)
 
 	return ss.str();
 }
+
+OpCode LuaV::GetInstructionOpCode(Instruction i)
+{
+	return GET_OPCODE(i);
+}

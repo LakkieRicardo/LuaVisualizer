@@ -68,13 +68,13 @@ namespace LuaV
 	public:
 
 		/// <returns>If the data in this state is currently valid</returns>
-		inline bool IsValid() { return valid; }
+		inline bool IsValid() const { return valid; }
 
 		/// <returns>The last instruction that was executed</returns>
-		inline OpCode GetLastInstruction() { return opCode; }
+		inline OpCode GetLastInstruction() const { return opCode; }
 
 		/// <returns>User-friendly name of the last executed instruction without OP_ prefix.</returns>
-		inline const std::string& GetLastInstructionName() { return opCodeName; }
+		inline const std::string& GetLastInstructionName() const { return opCodeName; }
 
 		/// <summary>
 		/// The instruction args map is a way of accessing all the arguments an instruction contains
@@ -82,7 +82,7 @@ namespace LuaV
 		/// object that the Lua VM runs on and, using bitwise manipulation, can be extracted from it.
 		/// </summary>
 		/// <returns>Map of all the arguments this instruction contains.</returns>
-		inline const std::map<std::string, int>& GetInstructionArgs() { return iArgs; }
+		inline const std::map<std::string, int>& GetInstructionArgs() const { return iArgs; }
 	};
 
 	/*
@@ -140,7 +140,7 @@ namespace LuaV
 		/// DoSingleInstruction(), and FinishCallExecution() are called.
 		/// </summary>
 		/// <returns></returns>
-		inline const LuaVMState& GetLuaVMState() const { return m_vmState; }
+		inline LuaVMState GetLuaVMState() const { return m_vmState; }
 
 		/// <summary>
 		/// Advances the program ahead by 1 instruction.
@@ -169,6 +169,14 @@ namespace LuaV
 		/// </summary>
 		/// <returns>Pointer to a lua_State.</returns>
 		lua_State* GetLuaState() const;
+
+		/// <summary>
+		/// Retrieves a value from the stack at a given location. The position is relative to
+		/// the frame, which is the function which is being called.
+		/// </summary>
+		/// <param name="offset">The position of this stack value relative to the stack
+		/// base in this frame. Can be negative.</param>
+		const StackValue* GetValueInStack(int offset) const;
 	};
 
 }

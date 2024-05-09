@@ -18,4 +18,9 @@ namespace LuaV
 	/// <param name="idx">Location on the stack</param>
 	/// <param name="type">What data is at that location</param>
 	std::string StackVarToString(lua_State* L, int idx, int type);
+
+	/// <summary>
+	/// Uses Lua macros to retrieve the opcode out of an instruction.
+	/// </summary>
+	OpCode GetInstructionOpCode(Instruction i);
 }
