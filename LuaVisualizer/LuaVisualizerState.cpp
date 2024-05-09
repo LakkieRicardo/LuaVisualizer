@@ -237,6 +237,17 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 		break;
 	}
 
+	// Check if we have stack values to read
+	// TODO unfinished
+
+	if (base < L->ci->top)
+	{
+		for (StkId stkIdx = base; stkIdx < L->ci->top; stkIdx++)
+		{
+			//StackValue value = *stkIdx;
+		}
+	}
+
 	valid = true;
 }
 
@@ -246,6 +257,7 @@ void LuaV::LuaVMState::ClearVMState()
 	opCode = static_cast<OpCode>(NUM_OPCODES); // TODO is this the right kind of cast?
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
+	stackValues.clear();
 }
 
 void LuaV::LuaVMState::MarkInvalid()

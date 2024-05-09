@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="include\Lua.h" />
     <ClInclude Include="include\LuaValueConverter.h" />
+    <ClInclude Include="include\LuaVisualizer.h" />
     <ClInclude Include="include\LuaVisualizerState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

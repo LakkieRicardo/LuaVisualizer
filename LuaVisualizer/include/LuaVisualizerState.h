@@ -2,7 +2,6 @@
 
 #include "Lua.h"
 #include <string>
-#include <sstream>
 #include <vector>
 #include <map>
 
@@ -51,6 +50,14 @@ namespace LuaV
 		/// </summary>
 		std::map<std::string, int> iArgs;
 
+		/// <summary>
+		/// All of the stack values copied from the Lua VM. This data is owned by this state and
+		/// will not be modified by future instructions. The beginning of the vector is the value
+		/// pointed to by base, and the last element is what is pointed to by top. This vector
+		/// does not include variable arguments or the closure object.
+		/// </summary>
+		std::vector<StackValue> stackValues;
+
 	public: // Functions to update fields
 
 		/// <summary>
@@ -88,6 +95,15 @@ namespace LuaV
 		/// </summary>
 		/// <returns>Map of all the arguments this instruction contains.</returns>
 		inline const std::map<std::string, int>& GetInstructionArgs() const { return iArgs; }
+
+		/// <summary>
+		/// A vector of all the stack values in this frame. This does not include upvalues, variable
+		/// arguments, or the closure object. Index 0 will point to the base of the stack, and the
+		/// last index will point to the top of the stack. These values are owned by this state
+		/// object.
+		/// </summary>
+		/// <returns>Vector of copied StackValues.</returns>
+		inline const std::vector<StackValue>& GetStackValues() const { return stackValues; }
 	};
 
 	/*

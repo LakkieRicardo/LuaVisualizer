@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LuaVisualizerDisplay.cpp" />
     <ClCompile Include="LuaVisualizerInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DemoScripts\LogicScript.lua" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LuaVisualizerDisplay.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
