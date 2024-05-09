@@ -134,6 +134,7 @@ LUAI_FUNC void luaV_objlen (lua_State *L, StkId ra, const TValue *rb);
 
 /* Visualizer functions */
 LUAI_FUNC void luaV_prepexec(lua_State* L);
+LUAI_FUNC void luaV_dosingleinstruct(lua_State* L);
 LUAI_FUNC void luaV_finishexec(lua_State* L);
 
 #endif

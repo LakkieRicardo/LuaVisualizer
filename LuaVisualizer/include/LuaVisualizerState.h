@@ -65,6 +65,11 @@ namespace LuaV
 		/// </summary>
 		void ClearVMState();
 
+		/// <summary>
+		/// Marks the valid flag as false, telling all readers to ignore the data.
+		/// </summary>
+		void MarkInvalid();
+
 	public:
 
 		/// <returns>If the data in this state is currently valid</returns>

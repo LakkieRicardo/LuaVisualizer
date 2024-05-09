@@ -53,9 +53,8 @@ Instruction LuaV::LuaVisualizerState::GetNextInstruction() const
 
 void LuaV::LuaVisualizerState::DoSingleInstruction()
 {
-	m_vmState.ClearVMState();
-	// TODO unfinished code
-
+	m_vmState.MarkInvalid();
+	luaV_dosingleinstruct(m_L);
 	m_vmState.UpdateVMState(m_L);
 }
 
@@ -247,4 +246,9 @@ void LuaV::LuaVMState::ClearVMState()
 	opCode = static_cast<OpCode>(NUM_OPCODES); // TODO is this the right kind of cast?
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
+}
+
+void LuaV::LuaVMState::MarkInvalid()
+{
+	valid = false;
 }
