@@ -10,6 +10,11 @@ void PrintStackValues(const LuaV::LuaVMState& vmState)
 {
 	std::cout << "\tStack:";
 
+	for (StkId stkIdx = vmState.GetStackBase(); stkIdx < vmState.GetStackTop(); stkIdx++)
+	{
+		std::cout << "\n\t" << stkIdx << ": " << LuaV::StackVarToString(stkIdx);
+	}
+
 	std::cout << std::endl;
 }
 
@@ -19,8 +24,8 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 	for (const auto& arg : iArgs)
 	{
 		std::cout << ", " << arg.first << ": " << arg.second;
-		const StackValue* value = vmState.GetStackBase() + arg.second;
-		std::string interpreted_value = LuaV::StackVarToString(vizer.GetLuaState(), arg.second, value->val.tt_);
+		StkId value = vmState.GetStackBase() + arg.second;
+		std::string interpreted_value = LuaV::StackVarToString(value);
 		std::cout << " (R[" << arg.second << "] = " << interpreted_value << ")";
 	}
 	std::cout << std::endl;

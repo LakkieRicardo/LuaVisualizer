@@ -162,7 +162,48 @@ std::string LuaV::StackVarToString(lua_State* L, int idx, int type)
 		ss << lua_topointer(L, idx);
 		break;
 	default:
-		return "unknown";
+		return "<unknown>";
+	}
+}
+
+std::string LuaV::StackVarToString(const StkId idx)
+{
+	lu_byte type = idx->val.tt_;
+	const TValue* value = &idx->val;
+	std::stringstream ss;
+	switch (type)
+	{
+	case LUA_TNIL:
+		return "nil";
+	case LUA_TBOOLEAN:
+		return l_isfalse(value) ? "true" : "false";
+		break;
+	case LUA_TNUMBER:
+		lua_Number numValue;
+		tonumber(value, &numValue);
+		ss << numValue;
+		break;
+	// TODO implement all the remaining types
+	/*case LUA_TSTRING:
+		ss << lua_tostring(L, idx);
+		break;
+	case LUA_TTABLE:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TFUNCTION:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TUSERDATA:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TTHREAD:
+		ss << lua_topointer(L, idx);
+		break;
+	case LUA_TLIGHTUSERDATA:
+		ss << lua_topointer(L, idx);
+		break;*/
+	default:
+		return "<unknown>";
 	}
 
 	return ss.str();

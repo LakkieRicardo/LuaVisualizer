@@ -17,6 +17,12 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 		PrintInstructionArgs(vmState, vizer);
 		std::cout << std::endl;
 		PrintStackValues(vmState);
+
+		if (vmState.GetLastInstruction() == OP_RETURN)
+		{
+			std::cout << "\nEnding at OP_RETURN...\n";
+			break;
+		}
 	}
 }
 
