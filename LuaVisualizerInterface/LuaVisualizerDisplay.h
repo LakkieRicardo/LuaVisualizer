@@ -8,4 +8,4 @@
 
 void PrintStackValues(const LuaV::LuaVMState& vmState);
 
-void PrintInstructionArgs(const LuaV::LuaVMState& vmState);
+void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer);

@@ -237,16 +237,20 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 		break;
 	}
 
+	stackValues.clear();
 	// Check if we have stack values to read
-	// TODO unfinished
-
 	if (base < L->ci->top)
 	{
-		for (StkId stkIdx = base; stkIdx < L->ci->top; stkIdx++)
+		/*for (StkId stkIdx = base; stkIdx < L->ci->top; stkIdx += sizeof(StackValue))
 		{
-			//StackValue value = *stkIdx;
-		}
+			TValue value = stkIdx->val;
+			value.value_
+			stackValues.push_back();
+		}*/
 	}
+
+	basePtr = base;
+	topPtr = L->ci->top;
 
 	valid = true;
 }
@@ -258,6 +262,8 @@ void LuaV::LuaVMState::ClearVMState()
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
 	stackValues.clear();
+	basePtr = nullptr;
+	topPtr = nullptr;
 }
 
 void LuaV::LuaVMState::MarkInvalid()

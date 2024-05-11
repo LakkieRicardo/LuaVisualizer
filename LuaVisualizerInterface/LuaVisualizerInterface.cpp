@@ -14,7 +14,7 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 		auto vmState = vizer.GetLuaVMState();
 
 		std::cout << vmState.GetLastInstructionName();
-		PrintInstructionArgs(vmState);
+		PrintInstructionArgs(vmState, vizer);
 		std::cout << std::endl;
 		PrintStackValues(vmState);
 	}

@@ -58,6 +58,11 @@ namespace LuaV
 		/// </summary>
 		std::vector<StackValue> stackValues;
 
+		/// <summary>
+		/// Pointers to the actual Lua stack base and top in this current frame.
+		/// </summary>
+		StackValue* basePtr, *topPtr;
+
 	public: // Functions to update fields
 
 		/// <summary>
@@ -104,6 +109,10 @@ namespace LuaV
 		/// </summary>
 		/// <returns>Vector of copied StackValues.</returns>
 		inline const std::vector<StackValue>& GetStackValues() const { return stackValues; }
+
+		inline const StackValue* GetStackBase() const { return basePtr; }
+
+		inline const StackValue* GetStackTop() const { return topPtr; }
 	};
 
 	/*
