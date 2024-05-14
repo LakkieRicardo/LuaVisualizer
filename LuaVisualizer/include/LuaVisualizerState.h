@@ -207,6 +207,17 @@ namespace LuaV
 		/// <param name="offset">The position of this stack value relative to the stack
 		/// base in this frame. Can be negative.</param>
 		const StackValue* GetValueInStack(int offset) const;
+
+		/// <summary>
+		/// Looks up an upvalue using the current context's LClosure variable.
+		/// </summary>
+		/// <param name="index">The index of the upvalue to access</param>
+		TValue* GetUpValue(int index) const;
+
+		/// <summary>
+		/// Looks up a constant value within this current execution frame.
+		/// </summary>
+		TValue* GetConstant(int index) const;
 	};
 
 }
