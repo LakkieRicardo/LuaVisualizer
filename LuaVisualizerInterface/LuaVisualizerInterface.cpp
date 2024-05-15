@@ -1,4 +1,4 @@
-#include "include/LuaVisualizerDisplay.h"
+#include "include/LuaVisualizerInterface.h"
 
 void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 {
@@ -26,17 +26,4 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 			break;
 		}
 	}
-}
-
-int main()
-{
-	std::cout << "Press \"Enter\" to advance the program by 1 instruction. The instruction, its arguments, and the state of the stack will be displayed.\n\n";
-
-	LuaV::LuaVisualizerState vizer;
-	vizer.LoadLuaScript("DemoScripts/LogicScript.lua");
-	vizer.BeginCallExecution();
-	
-	BeginStepThroughLoop(vizer);
-	
-	vizer.FinishCallExecution();
 }
