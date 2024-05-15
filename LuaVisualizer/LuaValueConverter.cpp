@@ -138,6 +138,7 @@ std::string LuaV::StackVarToString(const TValue* value)
 {
 	lu_byte type = value->tt_;
 	std::stringstream ss;
+	char* strval; // Used if reading contents of string
 	switch (type)
 	{
 	case LUA_TNIL:
@@ -150,27 +151,23 @@ std::string LuaV::StackVarToString(const TValue* value)
 		tonumber(value, &numValue);
 		ss << numValue;
 		break;
-		// TODO implement all the remaining types
-		/*case LUA_TSTRING:
-			ss << lua_tostring(L, idx);
+		case LUA_TSTRING:
+			strval = svalue(value);
+			ss << strval;
 			break;
 		case LUA_TTABLE:
-			ss << lua_topointer(L, idx);
-			break;
 		case LUA_TFUNCTION:
-			ss << lua_topointer(L, idx);
-			break;
 		case LUA_TUSERDATA:
-			ss << lua_topointer(L, idx);
-			break;
 		case LUA_TTHREAD:
-			ss << lua_topointer(L, idx);
-			break;
 		case LUA_TLIGHTUSERDATA:
-			ss << lua_topointer(L, idx);
-			break;*/
+			// Print the address of this data
+			// TODO: Print the number of elements in tables
+			// TODO: Print function metadata
+			// TODO: Print thread metadata
+			ss << value;
+			break;
 	default:
-		return "<unknown>";
+		return "undefined";
 	}
 
 	return ss.str();
