@@ -1,4 +1,7 @@
 #pragma once
+
+// Util functions to help print certain parts of the current Lua VM state
+
 #include "LuaVisualizer.h"
 
 #include <iostream>

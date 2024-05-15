@@ -1,5 +1,7 @@
 #pragma once
 
+// Records the current Lua VM state and writes it to its own data members
+
 #include "Lua.h"
 
 #include <iostream>
@@ -60,6 +62,8 @@ namespace LuaV
 		/// </summary>
 		std::vector<StackValue> stackValues;
 
+
+		// TODO move this to LuaVisualizerState because this isn't actually copying any Lua VM data
 		/// <summary>
 		/// Pointers to the actual Lua stack base and top in this current frame.
 		/// </summary>

@@ -1,5 +1,7 @@
 #pragma once
 
+// Interacts with the Lua VM to update and read its state
+
 #include "Lua.h"
 #include "LuaVMState.h"
 

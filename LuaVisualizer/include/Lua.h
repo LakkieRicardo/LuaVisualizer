@@ -1,3 +1,5 @@
+// Imports all required C-language Lua headers
+
 #pragma once
 
 extern "C" {

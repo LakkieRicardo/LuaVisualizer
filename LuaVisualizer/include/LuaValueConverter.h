@@ -1,5 +1,7 @@
 #pragma once
 
+// Converts Clang Lua types to presentable values
+
 #include "Lua.h"
 
 #include <string>
