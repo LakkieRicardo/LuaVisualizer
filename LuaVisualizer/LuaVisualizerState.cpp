@@ -41,8 +41,9 @@ void LuaV::LuaVisualizerState::FinishCallExecution()
 void LuaV::LuaVisualizerState::DoSingleInstruction()
 {
 	m_vmState.MarkInvalid();
+	m_vmState.UpdateVMInstruction(m_L);
 	luaV_dosingleinstruct(m_L);
-	m_vmState.UpdateVMState(m_L);
+	m_vmState.UpdateVMStack(m_L);
 }
 
 void LuaV::LuaVisualizerState::PrintInstructionsUntilReturn() const

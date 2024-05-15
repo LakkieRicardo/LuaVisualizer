@@ -25,13 +25,22 @@ namespace LuaV
 	class LuaVMState
 	{
 		/// <summary>
-		/// Represents whether this data is valid. If the VM has been closed or somehow
-		/// altered while the data is not updated, this should be marked as false.
+		/// Represents whether or not the instruction-related data is valid. This includes
+		/// the opcode, its name, instruction, and arguments. It does not include the
+		/// stack values.
 		/// 
 		/// Every time an update to the visualizer state is called, this flag should be
 		/// updated to false until UpdateVMState(lua_State*) is called.
 		/// </summary>
-		bool valid;
+		bool instructionValid;
+
+		/// <summary>
+		/// Whether the stack values are valid.
+		/// 
+		/// Every time an update to the visualizer state is called, this flag should be
+		/// updated to false until UpdateVMState(lua_State*) is called.
+		/// </summary>
+		bool stackValid;
 
 		/// <summary>
 		/// The last executed instruction.
@@ -65,10 +74,16 @@ namespace LuaV
 	public: // Functions to update fields
 
 		/// <summary>
-		/// Reads all of the variables from the VisualizerExecState and lua_State, interpreting
-		/// their values and writing them in a user-friendly way into LuaVMState.
+		/// Reads the instruction at the program counter (pc) in a lua_State, and updates the
+		/// corresponding values.
 		/// </summary>
-		void UpdateVMState(lua_State* L);
+		void UpdateVMInstruction(lua_State* L);
+
+		/// <summary>
+		/// Reads the current stack values using the base and top pointers 
+		/// </summary>
+		/// <param name="L"></param>
+		void UpdateVMStack(lua_State* L);
 
 		/// <summary>
 		/// Marks the LuaVMState as inoperative, meaning that it is not currently executing a
@@ -84,7 +99,7 @@ namespace LuaV
 	public:
 
 		/// <returns>If the data in this state is currently valid</returns>
-		inline bool IsValid() const { return valid; }
+		inline bool IsValid() const { return instructionValid && stackValid; }
 
 		inline Instruction GetLastInstruction() const { return instruction; }
 

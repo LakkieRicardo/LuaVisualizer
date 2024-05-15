@@ -1,8 +1,8 @@
 #include "include/LuaVMState.h"
 
-void LuaV::LuaVMState::UpdateVMState(lua_State* L)
+void LuaV::LuaVMState::UpdateVMInstruction(lua_State* L)
 {
-	valid = false;
+	instructionValid = false;
 
 	Instruction i = *(L->exec_state->pc);
 	instruction = i; // Update member field "instruction"
@@ -154,10 +154,18 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 		break;
 	}
 
+	instructionValid = true;
+}
+
+void LuaV::LuaVMState::UpdateVMStack(lua_State* L)
+{
+	stackValid = false;
+
 	stackValues.clear();
 	// Check if we have stack values to read
-	if (base < L->ci->top)
+	if (L->exec_state->base < L->ci->top)
 	{
+		// TODO copy all the values
 		/*for (StkId stkIdx = base; stkIdx < L->ci->top; stkIdx += sizeof(StackValue))
 		{
 			TValue value = stkIdx->val;
@@ -166,12 +174,12 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 		}*/
 	}
 
-	valid = true;
+	stackValid = true;
 }
 
 void LuaV::LuaVMState::ClearVMState()
 {
-	valid = false;
+	MarkInvalid();
 	instruction = static_cast<Instruction>(NUM_OPCODES);
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
@@ -180,5 +188,6 @@ void LuaV::LuaVMState::ClearVMState()
 
 void LuaV::LuaVMState::MarkInvalid()
 {
-	valid = false;
+	instructionValid = false;
+	stackValid = false;
 }
