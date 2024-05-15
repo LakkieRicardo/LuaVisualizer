@@ -13,12 +13,15 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 
 		auto vmState = vizer.GetLuaVMState();
 
-		std::cout << vmState.GetLastInstructionName();
+		std::cout << vmState.GetLastOperationName();
 		PrintInstructionArgs(vmState, vizer);
 		std::cout << std::endl;
+
+		// TODO it seems like these stacks values are 1 instruction behind. Investigate what's going on with the VM here
+		// This might be intended behavior?
 		PrintStackValues(vmState);
 
-		if (vmState.GetLastInstruction() == OP_RETURN)
+		if (vmState.GetLastOperation() == OP_RETURN)
 		{
 			std::cout << "\nEnding at OP_RETURN...\n";
 			break;

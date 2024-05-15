@@ -94,12 +94,19 @@ TValue* LuaV::LuaVisualizerState::GetConstant(int index) const
 	return m_execState.k + index;
 }
 
+std::string LuaV::LuaVisualizerState::GetConstantAsString(int index) const
+{
+	TString* strVal = tsvalue(GetConstant(index));
+	return strVal->contents;
+}
+
 void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 {
 	valid = false;
 
 	Instruction i = *(L->exec_state->pc);
-	opCode = GET_OPCODE(i);
+	instruction = i; // Update member field "instruction"
+	OpCode opCode = GET_OPCODE(i);
 	if (opCode < 0 || opCode >= NUM_OPCODES)
 	{
 		throw std::runtime_error("Found an invalid opcode");
@@ -268,7 +275,7 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 void LuaV::LuaVMState::ClearVMState()
 {
 	valid = false;
-	opCode = static_cast<OpCode>(NUM_OPCODES); // TODO is this the right kind of cast?
+	instruction = static_cast<Instruction>(NUM_OPCODES); // TODO is this the right kind of cast?
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
 	stackValues.clear();

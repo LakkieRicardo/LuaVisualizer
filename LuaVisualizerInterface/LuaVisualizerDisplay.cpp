@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "LuaVisualizerDisplay.h"
 
 /*
@@ -22,7 +23,7 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 {
 	const auto& iArgs = vmState.GetInstructionArgs();
 	int argA, argB, argC;
-	switch (vmState.GetLastInstruction())
+	switch (vmState.GetLastOperation())
 	{
 	case OP_GETTABUP:
 		/*
@@ -34,12 +35,8 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		argA = iArgs.at("A");
 		argB = iArgs.at("B");
 		argC = iArgs.at("C");
-		std::cout << ", A: " << argA << "(";
-		PrintRegisterArg(vmState, vizer, argA);
-		std::cout << "), B: " << argB << ", C: " << argC << "(";
-		PrintGlobalKeyArg(vmState, vizer, argC);
-		std::cout << ")\n";
-
+		std::cout << ",\tR[" << argA << "] = ";
+		std::cout << "UpValue[" << argB << "][\"" << vizer.GetConstantAsString(argC) << "\"]";
 		break;
 	case OP_SETTABUP:
 		/*
@@ -58,28 +55,44 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		  The second is likely more user friendly and tells you more about what the VM
 		  is actually doing
 		*/
-	default:
-		// Go through each instruction and print its value
-		for (const auto& arg : iArgs)
+		argA = iArgs.at("A");
+		argB = iArgs.at("B");
+		argC = iArgs.at("C");
+		std::cout << ",\tUpValue[" << argA << "][\"" << vizer.GetConstantAsString(argB) << "\"] = ";
+		if (TESTARG_k(vmState.GetLastInstruction()))
 		{
-			std::cout << ", " << arg.first << ": " << arg.second;
+			std::cout << LuaV::StackVarToString(vizer.GetConstant(argC));
 		}
+		else
+		{
+			std::cout << LuaV::StackVarToString(vmState.GetStackBase() + argC);
+		}
+	default:
 		break;
+	}
+	// Print all instruction arguments literally
+	std::cout << "\n\t\t";
+	bool printComma = false;
+	for (const auto& arg : iArgs)
+	{
+		// Only print the comma after the first argument
+		if (!printComma)
+		{
+			printComma = true;
+		}
+		else
+		{
+			std::cout << ", ";
+		}
+		std::cout << arg.first << ": " << arg.second;
 	}
 	std::cout << std::endl;
 }
 
-void PrintRegisterArg(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer, int arg)
+std::string RegisterArgAsString(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer, int arg)
 {
-	std::string stack_value = LuaV::StackVarToString(vmState.GetStackBase() + arg);
-	std::cout << "R[" << arg << "]: " << stack_value;
-}
-
-void PrintGlobalKeyArg(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer, int argC)
-{
-	// Find the key of this global
-	TValue* keyValue = vizer.GetConstant(argC);
-	// Interpret this value as a string
-	TString* keyValueStr = tsvalue(keyValue);
-	std::cout << '"' << keyValueStr->contents << '"';
+	std::stringstream ss;
+	ss << "R[" << arg << "]: ";
+	ss << LuaV::StackVarToString(vmState.GetStackBase() + arg);
+	return ss.str();
 }

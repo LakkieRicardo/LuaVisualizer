@@ -27,6 +27,8 @@ namespace LuaV
 	/// <returns>Displayable StackValue</returns>
 	std::string StackVarToString(const StkId idx);
 
+	std::string StackVarToString(const TValue* idx);
+
 	/// <summary>
 	/// Uses Lua macros to retrieve the opcode out of an instruction.
 	/// </summary>

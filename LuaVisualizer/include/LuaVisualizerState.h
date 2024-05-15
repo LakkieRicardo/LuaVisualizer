@@ -30,9 +30,9 @@ namespace LuaV
 		bool valid;
 
 		/// <summary>
-		/// The opcode of the last executed instruction.
+		/// The last executed instruction.
 		/// </summary>
-		OpCode opCode;
+		Instruction instruction;
 
 		/// <summary>
 		/// The display name of the last executed name without the OP_ prefix. This should
@@ -87,11 +87,13 @@ namespace LuaV
 		/// <returns>If the data in this state is currently valid</returns>
 		inline bool IsValid() const { return valid; }
 
+		inline Instruction GetLastInstruction() const { return instruction;  }
+
 		/// <returns>The last instruction that was executed</returns>
-		inline OpCode GetLastInstruction() const { return opCode; }
+		inline OpCode GetLastOperation() const { return GET_OPCODE(instruction); }
 
 		/// <returns>User-friendly name of the last executed instruction without OP_ prefix.</returns>
-		inline const std::string& GetLastInstructionName() const { return opCodeName; }
+		inline const std::string& GetLastOperationName() const { return opCodeName; }
 
 		/// <summary>
 		/// The instruction args map is a way of accessing all the arguments an instruction contains
@@ -218,6 +220,8 @@ namespace LuaV
 		/// Looks up a constant value within this current execution frame.
 		/// </summary>
 		TValue* GetConstant(int index) const;
+
+		std::string GetConstantAsString(int index) const;
 	};
 
 }
