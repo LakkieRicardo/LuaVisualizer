@@ -1,5 +1,4 @@
 #include "include/LuaValueConverter.h"
-#include <sstream>
 
 std::string LuaV::InstructionToString(const Instruction& i)
 {
@@ -128,42 +127,6 @@ std::string LuaV::InstructionToString(const Instruction& i)
 	}
 
 	return ss.str();
-}
-
-std::string LuaV::StackVarToString(lua_State* L, int idx, int type)
-{
-	std::stringstream ss;
-	switch (type)
-	{
-	case LUA_TNIL:
-		return "nil";
-	case LUA_TBOOLEAN:
-		ss << lua_toboolean(L, idx) ? "true" : "false";
-		break;
-	case LUA_TNUMBER:
-		ss << lua_tonumber(L, idx);
-		break;
-	case LUA_TSTRING:
-		ss << lua_tostring(L, idx);
-		break;
-	case LUA_TTABLE:
-		ss << lua_topointer(L, idx);
-		break;
-	case LUA_TFUNCTION:
-		ss << lua_topointer(L, idx);
-		break;
-	case LUA_TUSERDATA:
-		ss << lua_topointer(L, idx);
-		break;
-	case LUA_TTHREAD:
-		ss << lua_topointer(L, idx);
-		break;
-	case LUA_TLIGHTUSERDATA:
-		ss << lua_topointer(L, idx);
-		break;
-	default:
-		return "<unknown>";
-	}
 }
 
 std::string LuaV::StackVarToString(const StkId idx)

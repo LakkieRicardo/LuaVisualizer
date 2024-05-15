@@ -1,6 +1,4 @@
-#include <iostream>
-#include <sstream>
-#include "LuaVisualizerDisplay.h"
+#include "include/LuaVisualizerDisplay.h"
 
 /*
   This file contains all of the functions for writing the VM status as
@@ -39,22 +37,6 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		std::cout << "UpValue[" << argB << "][\"" << vizer.GetConstantAsString(argC) << "\"]";
 		break;
 	case OP_SETTABUP:
-		/*
-		  Similar to OP_GETTABUP, but the key is accessed through B and is set to the
-		  constant value at C: UpValue[A][K[B]:string] := RK(C)
-
-		  TODO: decide which format to use:
-
-		  OP_SETTABUP, A: n, B: n (str), C: n (RK[n]: n)
-
-		  or
-
-		  OP_SETTABUP, UpValue[n][K[n]] = RK[n]
-					   A: n, B: n, C: n
-
-		  The second is likely more user friendly and tells you more about what the VM
-		  is actually doing
-		*/
 		argA = iArgs.at("A");
 		argB = iArgs.at("B");
 		argC = iArgs.at("C");
@@ -67,6 +49,7 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		{
 			std::cout << LuaV::StackVarToString(vmState.GetStackBase() + argC);
 		}
+		break;
 	default:
 		break;
 	}

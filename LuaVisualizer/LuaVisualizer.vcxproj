@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="LuaValueConverter.cpp" />
     <ClCompile Include="LuaVisualizerState.cpp" />
+    <ClCompile Include="LuaVMState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lua\Lua.vcxproj">
@@ -157,6 +158,7 @@
     <ClInclude Include="include\LuaValueConverter.h" />
     <ClInclude Include="include\LuaVisualizer.h" />
     <ClInclude Include="include\LuaVisualizerState.h" />
+    <ClInclude Include="include\LuaVMState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

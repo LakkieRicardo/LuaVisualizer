@@ -1,5 +1,4 @@
-#include <iostream>
-#include "LuaVisualizerDisplay.h"
+#include "include/LuaVisualizerDisplay.h"
 
 void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 {
