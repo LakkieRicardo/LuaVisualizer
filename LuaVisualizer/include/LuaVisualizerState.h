@@ -117,6 +117,17 @@ namespace LuaV
 		TValue* GetConstant(int index) const;
 
 		std::string GetConstantAsString(int index) const;
+
+		/// <summary>
+		/// Gets the current base of the stack within this current frame.
+		/// </summary>
+		StkId GetStackBase() const;
+
+		/// <summary>
+		/// Gets the current top of the stack within this current frame.
+		/// </summary>
+		/// <returns></returns>
+		StkId GetStackTop() const;
 	};
 
 }

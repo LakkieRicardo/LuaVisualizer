@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-void PrintStackValues(const LuaV::LuaVMState& vmState);
+void PrintStackValues(const LuaV::LuaVisualizerState& vizer);
 
 void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer);
 

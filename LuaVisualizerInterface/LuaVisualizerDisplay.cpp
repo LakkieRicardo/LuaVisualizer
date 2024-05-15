@@ -5,11 +5,11 @@
   strings in a command line console. 
 */
 
-void PrintStackValues(const LuaV::LuaVMState& vmState)
+void PrintStackValues(const LuaV::LuaVisualizerState& vizer)
 {
 	std::cout << "\tStack:";
 
-	for (StkId stkIdx = vmState.GetStackBase(); stkIdx < vmState.GetStackTop(); stkIdx++)
+	for (StkId stkIdx = vizer.GetStackBase(); stkIdx < vizer.GetStackTop(); stkIdx++)
 	{
 		std::cout << "\n\t" << stkIdx << ": " << LuaV::StackVarToString(stkIdx);
 	}
@@ -47,7 +47,7 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		}
 		else
 		{
-			std::cout << LuaV::StackVarToString(vmState.GetStackBase() + argC);
+			std::cout << LuaV::StackVarToString(vizer.GetStackBase() + argC);
 		}
 		break;
 	default:
@@ -76,6 +76,6 @@ std::string RegisterArgAsString(const LuaV::LuaVMState& vmState, const LuaV::Lua
 {
 	std::stringstream ss;
 	ss << "R[" << arg << "]: ";
-	ss << LuaV::StackVarToString(vmState.GetStackBase() + arg);
+	ss << LuaV::StackVarToString(vizer.GetStackBase() + arg);
 	return ss.str();
 }

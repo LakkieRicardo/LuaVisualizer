@@ -91,3 +91,13 @@ std::string LuaV::LuaVisualizerState::GetConstantAsString(int index) const
 	TString* strVal = tsvalue(GetConstant(index));
 	return strVal->contents;
 }
+
+StkId LuaV::LuaVisualizerState::GetStackBase() const
+{
+	return m_execState.base;
+}
+
+StkId LuaV::LuaVisualizerState::GetStackTop() const
+{
+	return m_L->ci->top;
+}

@@ -166,21 +166,16 @@ void LuaV::LuaVMState::UpdateVMState(lua_State* L)
 		}*/
 	}
 
-	basePtr = base;
-	topPtr = L->ci->top;
-
 	valid = true;
 }
 
 void LuaV::LuaVMState::ClearVMState()
 {
 	valid = false;
-	instruction = static_cast<Instruction>(NUM_OPCODES); // TODO is this the right kind of cast?
+	instruction = static_cast<Instruction>(NUM_OPCODES);
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
 	stackValues.clear();
-	basePtr = nullptr;
-	topPtr = nullptr;
 }
 
 void LuaV::LuaVMState::MarkInvalid()

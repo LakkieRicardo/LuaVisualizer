@@ -18,7 +18,7 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 
 		// TODO it seems like these stacks values are 1 instruction behind. Investigate what's going on with the VM here
 		// This might be intended behavior?
-		PrintStackValues(vmState);
+		PrintStackValues(vizer);
 
 		if (vmState.GetLastOperation() == OP_RETURN)
 		{

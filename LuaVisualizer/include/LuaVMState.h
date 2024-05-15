@@ -62,13 +62,6 @@ namespace LuaV
 		/// </summary>
 		std::vector<StackValue> stackValues;
 
-
-		// TODO move this to LuaVisualizerState because this isn't actually copying any Lua VM data
-		/// <summary>
-		/// Pointers to the actual Lua stack base and top in this current frame.
-		/// </summary>
-		StkId basePtr, topPtr;
-
 	public: // Functions to update fields
 
 		/// <summary>
@@ -117,10 +110,6 @@ namespace LuaV
 		/// </summary>
 		/// <returns>Vector of copied StackValues.</returns>
 		inline const std::vector<StackValue>& GetStackValues() const { return stackValues; }
-
-		inline StkId GetStackBase() const { return basePtr; }
-
-		inline StkId GetStackTop() const { return topPtr; }
 	};
 
 }
