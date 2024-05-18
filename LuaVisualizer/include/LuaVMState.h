@@ -115,7 +115,7 @@ namespace LuaV
 		/// object that the Lua VM runs on and, using bitwise manipulation, can be extracted from it.
 		/// </summary>
 		/// <returns>Map of all the arguments this instruction contains.</returns>
-		inline const std::map<std::string, int>& GetInstructionArgs() const { return iArgs; }
+		inline const std::map<std::string, int>& GetLastInstructionArgs() const { return iArgs; }
 
 		/// <summary>
 		/// A vector of all the stack values in this frame. This does not include upvalues, variable

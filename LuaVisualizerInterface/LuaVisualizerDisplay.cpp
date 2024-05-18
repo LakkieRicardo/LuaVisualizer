@@ -7,11 +7,12 @@
 
 void PrintStackValues(const LuaV::LuaVisualizerState& vizer)
 {
-	std::cout << "\tStack:";
+	std::cout << "Register\tAddress\t\t\tValue";
 
 	for (StkId stkIdx = vizer.GetStackBase(); stkIdx < vizer.GetStackTop(); stkIdx++)
 	{
-		std::cout << "\n\t" << stkIdx << ": " << LuaV::StackVarToString(stkIdx);
+		size_t registerOffset = stkIdx - vizer.GetStackBase();
+		std::cout << "\nR[" << registerOffset << "]\t\t" << stkIdx << "\t" << LuaV::StackVarToString(stkIdx);
 	}
 
 	std::cout << std::endl;
@@ -19,17 +20,12 @@ void PrintStackValues(const LuaV::LuaVisualizerState& vizer)
 
 void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer)
 {
-	const auto& iArgs = vmState.GetInstructionArgs();
-	int argA, argB, argC;
+	const auto& iArgs = vmState.GetLastInstructionArgs();
+	int argA, argB, argC, argsC;
+	std::string argsCAsString;
 	switch (vmState.GetLastOperation())
 	{
 	case OP_GETTABUP:
-		/*
-		  This instruction follows this logic: R[A] := UpValue[B][K[C]:string] and takes the
-		  arguments A, B, C. It should be printed as:
-
-		  OP_GETTABUP, A: n (R[n]: n), B: n, C: n (str)
-		*/
 		argA = iArgs.at("A");
 		argB = iArgs.at("B");
 		argC = iArgs.at("C");
@@ -49,6 +45,74 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		{
 			std::cout << LuaV::StackVarToString(vizer.GetStackBase() + argC);
 		}
+		break;
+
+	/*
+	  These instructions are simple operations, such as adding, multiplication, bitwise operations, etc.
+
+	  They should be printed as:
+
+	  OP_ADD, R[n] = n + n (R[n] + R[n])
+	*/
+
+	case OP_ADDI:
+		argA = iArgs.at("A");
+		argB = iArgs.at("B");
+		argsC = iArgs.at("sC");
+		argsCAsString = argsC;
+		std::cout << SimpleOpAsString("+", argA, argB, argsC, GetStackVarAsString(vmState, argB), argsCAsString);
+		break;
+	case OP_ADDK:
+		break;
+	case OP_SUBK:
+		break;
+	case OP_MULK:
+		break;
+	case OP_MODK:
+		break;
+	case OP_POWK:
+		break;
+	case OP_DIVK:
+		break;
+	case OP_IDIVK:
+		break;
+	case OP_BANDK:
+		break;
+	case OP_BORK:
+		break;
+	case OP_BXORK:
+		break;
+	case OP_SHRI:
+		break;
+	case OP_SHLI:
+		break;
+	case OP_ADD:
+		argA = iArgs.at("A");
+		argB = iArgs.at("B");
+		argC = iArgs.at("C");
+		std::cout << ",\t\t" << SimpleOpAsString("+", argA, argB, argC, LuaV::StackVarToString(vizer.GetStackBase() + argB), LuaV::StackVarToString(vizer.GetStackBase() + argC));
+		break;
+	case OP_SUB:
+		break;
+	case OP_MUL:
+		break;
+	case OP_MOD:
+		break;
+	case OP_POW:
+		break;
+	case OP_DIV:
+		break;
+	case OP_IDIV:
+		break;
+	case OP_BAND:
+		break;
+	case OP_BOR:
+		break;
+	case OP_BXOR:
+		break;
+	case OP_SHL:
+		break;
+	case OP_SHR:
 		break;
 	default:
 		break;
@@ -78,4 +142,16 @@ std::string RegisterArgAsString(const LuaV::LuaVMState& vmState, const LuaV::Lua
 	ss << "R[" << arg << "]: ";
 	ss << LuaV::StackVarToString(vizer.GetStackBase() + arg);
 	return ss.str();
+}
+
+std::string SimpleOpAsString(std::string operation, int a, int b, int c, std::string bVal, std::string cVal)
+{
+	std::stringstream ss;
+	ss << "R[" << a << "] = " << bVal << ' ' << operation << ' ' << cVal << " (R[" << b << "] " << operation << " R[" << c << "])";
+	return ss.str();
+}
+
+std::string GetStackVarAsString(const LuaV::LuaVMState& vmState, int idx)
+{
+	return LuaV::StackVarToString(&vmState.GetStackValues()[idx].val);
 }

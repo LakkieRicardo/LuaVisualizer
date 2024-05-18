@@ -6,7 +6,7 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 	{
 		// Wait for user input to execute an instruction
 		std::string inputBuffer;
-		//std::getline(std::cin, inputBuffer);
+		std::getline(std::cin, inputBuffer);
 
 		vizer.DoSingleInstruction();
 
