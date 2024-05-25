@@ -159,22 +159,32 @@ void LuaV::LuaVMState::UpdateVMInstruction(lua_State* L)
 
 void LuaV::LuaVMState::UpdateVMStack(lua_State* L)
 {
+	// If this value stays false, it means that there are no valid stack values
+	// And the data is invalid
 	stackValid = false;
 
-	stackValues.clear();
 	// Check if we have stack values to read
 	if (L->exec_state->base < L->ci->top)
 	{
-		// TODO copy all the values
-		/*for (StkId stkIdx = base; stkIdx < L->ci->top; stkIdx += sizeof(StackValue))
-		{
-			TValue value = stkIdx->val;
-			value.value_
-			stackValues.push_back();
-		}*/
+		stackBase = nullptr;
+		stackTop = nullptr;
+
+		// stack top - bottom
+		size_t stackSize = L->ci->top - L->exec_state->base;
+
+		// Resize the stack
+		localStack.reset(new char[stackSize]);
+
+		// TODO this is just filling up the copied stack with undefined values
+		// Maybe this is just using smart pointers wrong?
+		std::memcpy(localStack.get(), L->exec_state->base, stackSize);
+
+		stackBase = reinterpret_cast<StkId>(localStack.get());
+		stackTop = reinterpret_cast<StkId>(localStack.get()) + stackSize;
+		
+		stackValid = true;
 	}
 
-	stackValid = true;
 }
 
 void LuaV::LuaVMState::ClearVMState()
@@ -183,7 +193,9 @@ void LuaV::LuaVMState::ClearVMState()
 	instruction = static_cast<Instruction>(NUM_OPCODES);
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
-	stackValues.clear();
+	localStack.reset();
+	stackBase = nullptr;
+	stackTop = nullptr;
 }
 
 void LuaV::LuaVMState::MarkInvalid()

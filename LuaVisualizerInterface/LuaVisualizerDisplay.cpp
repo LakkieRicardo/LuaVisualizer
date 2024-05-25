@@ -43,7 +43,7 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		}
 		else
 		{
-			std::cout << LuaV::StackVarToString(vizer.GetStackBase() + argC);
+			std::cout << LuaV::StackVarToString(vmState.GetStackBase() + argC);
 		}
 		break;
 
@@ -52,7 +52,11 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 
 	  They should be printed as:
 
-	  OP_ADD, R[n] = n + n (R[n] + R[n])
+	  OP_ADD, R[n] = n + n
+
+	  The values for the operations need to be read from the VM state so that they're the values at the
+	  time of execution. However, when actually printing the stack, they need to be directly read from
+	  the Lua VM because the user needs to know what the current state of the data is.
 	*/
 
 	case OP_ADDI:
@@ -60,7 +64,7 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		argB = iArgs.at("B");
 		argsC = iArgs.at("sC");
 		argsCAsString = argsC;
-		std::cout << SimpleOpAsString("+", argA, argB, argsC, GetStackVarAsString(vmState, argB), argsCAsString);
+		std::cout << SimpleOpAsString("+", argA, GetStackVarAsString(vmState, argB), argsCAsString);
 		break;
 	case OP_ADDK:
 		break;
@@ -90,7 +94,7 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		argA = iArgs.at("A");
 		argB = iArgs.at("B");
 		argC = iArgs.at("C");
-		std::cout << ",\t\t" << SimpleOpAsString("+", argA, argB, argC, LuaV::StackVarToString(vizer.GetStackBase() + argB), LuaV::StackVarToString(vizer.GetStackBase() + argC));
+		std::cout << ",\t\t" << SimpleOpAsString("+", argA, LuaV::StackVarToString(vmState.GetStackBase() + argB), LuaV::StackVarToString(vmState.GetStackBase() + argC));
 		break;
 	case OP_SUB:
 		break;
@@ -144,14 +148,14 @@ std::string RegisterArgAsString(const LuaV::LuaVMState& vmState, const LuaV::Lua
 	return ss.str();
 }
 
-std::string SimpleOpAsString(std::string operation, int a, int b, int c, std::string bVal, std::string cVal)
+std::string SimpleOpAsString(std::string operation, int a, std::string bVal, std::string cVal)
 {
 	std::stringstream ss;
-	ss << "R[" << a << "] = " << bVal << ' ' << operation << ' ' << cVal << " (R[" << b << "] " << operation << " R[" << c << "])";
+	ss << "R[" << a << "] = " << bVal << ' ' << operation << ' ' << cVal;
 	return ss.str();
 }
 
 std::string GetStackVarAsString(const LuaV::LuaVMState& vmState, int idx)
 {
-	return LuaV::StackVarToString(&vmState.GetStackValues()[idx].val);
+	return LuaV::StackVarToString(vmState.GetStackBase() + idx);
 }

@@ -84,7 +84,7 @@ namespace LuaV
 		/// DoSingleInstruction(), and FinishCallExecution() are called.
 		/// </summary>
 		/// <returns></returns>
-		inline LuaVMState GetLuaVMState() const { return m_vmState; }
+		inline const LuaVMState& GetLuaVMState() const { return m_vmState; }
 
 		/// <summary>
 		/// Retrieves the current Lua state from the script loaded with LoadLuaScript(string).

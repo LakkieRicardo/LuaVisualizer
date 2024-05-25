@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace LuaV
 {
@@ -71,6 +72,21 @@ namespace LuaV
 		/// </summary>
 		std::vector<StackValue> stackValues;
 
+		/// <summary>
+		/// A local copy of the Lua stack. This is copied using std::memcpy from the Lua stack
+		/// "base" to "top".
+		/// </summary>
+		std::unique_ptr<char[]> localStack;
+
+		/// <summary>
+		/// Pointer to the base or the top of the stack, pointing to the memory allocated at
+		/// localStack.
+		/// 
+		/// The stack top is not actually a valid pointer, but is used for checking the upper
+		/// limit when iterating through all stack values.
+		/// </summary>
+		StkId stackBase, stackTop;
+
 	public: // Functions to update fields
 
 		/// <summary>
@@ -118,13 +134,14 @@ namespace LuaV
 		inline const std::map<std::string, int>& GetLastInstructionArgs() const { return iArgs; }
 
 		/// <summary>
-		/// A vector of all the stack values in this frame. This does not include upvalues, variable
-		/// arguments, or the closure object. Index 0 will point to the base of the stack, and the
-		/// last index will point to the top of the stack. These values are owned by this state
-		/// object.
+		/// Fetches and returns a pointer to the base of the local, copied stack.
 		/// </summary>
-		/// <returns>Vector of copied StackValues.</returns>
-		inline const std::vector<StackValue>& GetStackValues() const { return stackValues; }
+		inline StkId GetStackBase() const { return stackBase; }
+
+		/// <summary>
+		/// Fetches and returns a pointer to the top of the local, copied stack.
+		/// </summary>
+		inline StkId GetStackTop() const { return stackTop; }
 	};
 
 }

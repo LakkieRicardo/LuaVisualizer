@@ -42,15 +42,8 @@ void LuaV::LuaVisualizerState::DoSingleInstruction()
 {
 	m_vmState.MarkInvalid();
 	m_vmState.UpdateVMInstruction(m_L);
-	luaV_dosingleinstruct(m_L);
-	/*
-	  TODO: These stack values will have to be copied before the instruction executes so that we can
-	  print the arguments in basic operations like OP_ADD. Otherwise, the correct instruction arguments
-	  will be printed but they will be evaluated to the value in its place after the operation.
-
-	  These values will have to be copied before the luaV_dosingleinstruct call.
-	*/
 	m_vmState.UpdateVMStack(m_L);
+	luaV_dosingleinstruct(m_L);
 }
 
 void LuaV::LuaVisualizerState::PrintInstructionsUntilReturn() const
