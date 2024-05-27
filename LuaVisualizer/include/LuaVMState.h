@@ -79,13 +79,9 @@ namespace LuaV
 		void* localStack;
 
 		/// <summary>
-		/// Pointer to the base or the top of the stack, pointing to the memory allocated at
-		/// localStack.
-		/// 
-		/// The stack top is not actually a valid pointer, but is used for checking the upper
-		/// limit when iterating through all stack values.
+		/// Pointer to the base of the stack, pointing to the memory allocated at localStack.
 		/// </summary>
-		StkId stackBase, stackTop;
+		StkId stackBase;
 
 	public: // Functions to update fields
 
@@ -137,11 +133,6 @@ namespace LuaV
 		/// Fetches and returns a pointer to the base of the local, copied stack.
 		/// </summary>
 		inline StkId GetStackBase() const { return stackBase; }
-
-		/// <summary>
-		/// Fetches and returns a pointer to the top of the local, copied stack.
-		/// </summary>
-		inline StkId GetStackTop() const { return stackTop; }
 	};
 
 }

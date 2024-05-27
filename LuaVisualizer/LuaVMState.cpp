@@ -167,7 +167,6 @@ void LuaV::LuaVMState::UpdateVMStack(lua_State* L)
 	if (L->exec_state->base < L->ci->top)
 	{
 		stackBase = nullptr;
-		stackTop = nullptr;
 
 		// stack top - bottom
 		size_t stackSize = (L->ci->top - L->exec_state->base) * sizeof(StackValue);
@@ -179,7 +178,6 @@ void LuaV::LuaVMState::UpdateVMStack(lua_State* L)
 		std::memcpy(localStack, L->exec_state->base, stackSize);
 
 		stackBase = reinterpret_cast<StkId>(localStack);
-		stackTop = reinterpret_cast<StkId>(localStack) + stackSize;
 		
 		stackValid = true;
 	}
@@ -195,7 +193,6 @@ void LuaV::LuaVMState::ClearVMState()
 	delete[] localStack;
 	localStack = nullptr;
 	stackBase = nullptr;
-	stackTop = nullptr;
 }
 
 void LuaV::LuaVMState::MarkInvalid()
