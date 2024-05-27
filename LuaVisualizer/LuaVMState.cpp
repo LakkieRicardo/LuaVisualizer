@@ -170,17 +170,16 @@ void LuaV::LuaVMState::UpdateVMStack(lua_State* L)
 		stackTop = nullptr;
 
 		// stack top - bottom
-		size_t stackSize = L->ci->top - L->exec_state->base;
+		size_t stackSize = (L->ci->top - L->exec_state->base) * sizeof(StackValue);
 
 		// Resize the stack
-		localStack.reset(new char[stackSize]);
+		delete[] localStack;
+		localStack = new char[stackSize];
 
-		// TODO this is just filling up the copied stack with undefined values
-		// Maybe this is just using smart pointers wrong?
-		std::memcpy(localStack.get(), L->exec_state->base, stackSize);
+		std::memcpy(localStack, L->exec_state->base, stackSize);
 
-		stackBase = reinterpret_cast<StkId>(localStack.get());
-		stackTop = reinterpret_cast<StkId>(localStack.get()) + stackSize;
+		stackBase = reinterpret_cast<StkId>(localStack);
+		stackTop = reinterpret_cast<StkId>(localStack) + stackSize;
 		
 		stackValid = true;
 	}
@@ -193,7 +192,8 @@ void LuaV::LuaVMState::ClearVMState()
 	instruction = static_cast<Instruction>(NUM_OPCODES);
 	opCodeName = "UNKNOWN";
 	iArgs.clear();
-	localStack.reset();
+	delete[] localStack;
+	localStack = nullptr;
 	stackBase = nullptr;
 	stackTop = nullptr;
 }

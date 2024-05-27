@@ -76,7 +76,7 @@ namespace LuaV
 		/// A local copy of the Lua stack. This is copied using std::memcpy from the Lua stack
 		/// "base" to "top".
 		/// </summary>
-		std::unique_ptr<char[]> localStack;
+		void* localStack;
 
 		/// <summary>
 		/// Pointer to the base or the top of the stack, pointing to the memory allocated at
