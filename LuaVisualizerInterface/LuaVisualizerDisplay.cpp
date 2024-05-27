@@ -59,6 +59,8 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 	  the Lua VM because the user needs to know what the current state of the data is.
 	*/
 
+	// TODO finish filling out these ops
+
 	case OP_ADDI:
 		argA = iArgs.at("A");
 		argB = iArgs.at("B");
@@ -138,6 +140,11 @@ void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisual
 		std::cout << arg.first << ": " << arg.second;
 	}
 	std::cout << std::endl;
+}
+
+void PrintGlobals(const LuaV::LuaVisualizerState& vizer)
+{
+	// TODO implement this function
 }
 
 std::string RegisterArgAsString(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer, int arg)

@@ -6,7 +6,7 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 	{
 		// Wait for user input to execute an instruction
 		std::string inputBuffer;
-		std::getline(std::cin, inputBuffer);
+		//std::getline(std::cin, inputBuffer);
 
 		vizer.DoSingleInstruction();
 
@@ -14,6 +14,11 @@ void BeginStepThroughLoop(LuaV::LuaVisualizerState& vizer)
 
 		std::cout << std::endl << vmState.GetLastOperationName();
 		PrintInstructionArgs(vmState, vizer);
+		if (vmState.GetLastOperation() == OP_GETTABUP || vmState.GetLastOperation() == OP_SETTABUP)
+		{
+			// Print globals
+			PrintGlobals(vizer);
+		}
 		std::cout << std::endl;
 
 		PrintStackValues(vizer);

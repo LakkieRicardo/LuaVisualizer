@@ -7,9 +7,27 @@
 #include <iostream>
 #include <sstream>
 
+/// <summary>
+/// Prints all of the values in the stack from base to top pointer.
+/// 
+/// This will print the values after they have been modified by
+/// LuaVMState::GetLastOperation. If there are relevant stack values in this
+/// operation that need to be retrieved from before the current instruction,
+/// the method PrintInstructionArgs will handle this.
+/// </summary>
 void PrintStackValues(const LuaV::LuaVisualizerState& vizer);
 
+/// <summary>
+/// Prints the logic behind the current operation if applicable, and also prints
+/// the raw values of all of the arguments in this instruction.
+/// </summary>
 void PrintInstructionArgs(const LuaV::LuaVMState& vmState, const LuaV::LuaVisualizerState& vizer);
+
+/// <summary>
+/// Prints all of the global values. This takes up lots of screen space, so only
+/// do this when the globals are updated using an instruction like SETTABUP.
+/// </summary>
+void PrintGlobals(const LuaV::LuaVisualizerState& vizer);
 
 /// <summary>
 /// Writes out an argument as a register in the following format:
